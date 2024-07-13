@@ -1,3 +1,5 @@
+"""Register Demo"""
+
 import pygame
 import sys
 
@@ -5,8 +7,8 @@ import sys
 pygame.init()
 
 # Constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1700
+SCREEN_HEIGHT = 1060
 FPS = 60
 
 # Colors
@@ -14,7 +16,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 
-class Game:
+class RegisterGame:
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption('Pygame Class-Based Template')
@@ -60,21 +62,8 @@ class EventHandler:
             # Add other event types here
 
 
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, color):
-        super().__init__()
-        self.image = pygame.Surface((width, height))
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-
-    def update(self):
-        # Update sprite behavior
-        pass
-
-
 def main():
-    game = Game()
+    game = RegisterGame()
     game.run()
 
 
