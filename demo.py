@@ -9,6 +9,7 @@ pygame.init()
 # Constants
 SCREEN_WIDTH = 1700
 SCREEN_HEIGHT = 1060
+EDGE_GAP = 20
 FPS = 60
 
 # Colors
@@ -40,11 +41,46 @@ class RegisterGame:
     def draw(self):
         self.screen.fill(WHITE)
         # Draw game objects
+        self.ram_block()
+        self.registers_block()
+        self.alu_block()
         pygame.display.flip()
 
     def quit(self):
         pygame.quit()
         sys.exit()
+
+    def alu_block(self):
+        alu_screen_width = EDGE_GAP
+        alu_screen_height = EDGE_GAP
+        alu_screen_top_offset = SCREEN_HEIGHT - alu_screen_height - EDGE_GAP
+        alu_screen_left_offset = SCREEN_WIDTH - alu_screen_width - EDGE_GAP
+        pygame.draw.rect(
+            self.screen,
+            BLACK,
+            (alu_screen_left_offset, alu_screen_top_offset, alu_screen_width, alu_screen_height))
+
+    def registers_block(self):
+        reg_screen_width = EDGE_GAP
+        reg_screen_height = EDGE_GAP
+        reg_screen_top_offset = EDGE_GAP
+        reg_screen_left_offset = SCREEN_WIDTH - reg_screen_width - EDGE_GAP
+        pygame.draw.rect(
+            self.screen,
+            BLACK,
+            (reg_screen_left_offset, reg_screen_top_offset, reg_screen_width, reg_screen_height))
+
+
+    def ram_block(self):
+        ram_screen_top_offset = EDGE_GAP
+        ram_screen_left_offset = EDGE_GAP
+        ram_screen_width = 900
+        ram_screen_height = SCREEN_HEIGHT - 40
+        pygame.draw.rect(
+            self.screen,
+            BLACK,
+            (ram_screen_left_offset, ram_screen_top_offset, ram_screen_width, ram_screen_height))
+
 
 
 class EventHandler:
