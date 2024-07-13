@@ -2,19 +2,31 @@
 
 import pygame
 import sys
+import random
 
-# Initialize Pygame
 pygame.init()
 
-# Constants
 SCREEN_WIDTH = 1700
 SCREEN_HEIGHT = 1060
 EDGE_GAP = 20
-FPS = 60
+FPS = 6
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RAM_COLOUR = (25, 25, 25)
+ALU_COLOR = (60, 60, 60)
+TEXT_COLOR = (255, 128, 0)
+RAM = (
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+)
+
 
 
 class RegisterGame:
@@ -24,6 +36,16 @@ class RegisterGame:
         self.clock = pygame.time.Clock()
         self.running = True
         self.event_handler = EventHandler(self)
+        self.screen_title_font = pygame.font.SysFont('Arial', 30)
+        self.code_font = pygame.font.SysFont('Arial', 12)
+
+        self.ram_screen = None
+        self.registers_screen = None
+        self.alu_screen = None
+
+    def draw_text(self, screen, text, font, text_color, x, y):
+        img = font.render(text, True, text_color)
+        screen.blit(img, (x, y))
 
     def run(self):
         while self.running:
@@ -40,10 +62,10 @@ class RegisterGame:
 
     def draw(self):
         self.screen.fill(WHITE)
-        # Draw game objects
         self.ram_block()
         self.registers_block()
         self.alu_block()
+        self.fill_ram_block()
         pygame.display.flip()
 
     def quit(self):
@@ -51,35 +73,77 @@ class RegisterGame:
         sys.exit()
 
     def alu_block(self):
-        alu_screen_width = EDGE_GAP
-        alu_screen_height = EDGE_GAP
-        alu_screen_top_offset = SCREEN_HEIGHT - alu_screen_height - EDGE_GAP
-        alu_screen_left_offset = SCREEN_WIDTH - alu_screen_width - EDGE_GAP
-        pygame.draw.rect(
+        alu_screen_height = (SCREEN_HEIGHT // 2) - EDGE_GAP
+        alu_screen_top_offset = (SCREEN_HEIGHT // 2)
+        alu_screen_left_offset = 900 + (2 * EDGE_GAP)
+        alu_screen_width = (SCREEN_WIDTH - alu_screen_left_offset) - EDGE_GAP
+
+        self.alu_screen = pygame.draw.rect(
             self.screen,
-            BLACK,
+            ALU_COLOR,
             (alu_screen_left_offset, alu_screen_top_offset, alu_screen_width, alu_screen_height))
 
+        self.draw_text(
+            self.screen,
+            "ALU",
+            self.screen_title_font,
+            TEXT_COLOR,
+            alu_screen_left_offset + EDGE_GAP,
+            alu_screen_top_offset + EDGE_GAP)
+
     def registers_block(self):
-        reg_screen_width = EDGE_GAP
-        reg_screen_height = EDGE_GAP
+        reg_screen_height = (SCREEN_HEIGHT // 2) - (2 * EDGE_GAP)
         reg_screen_top_offset = EDGE_GAP
-        reg_screen_left_offset = SCREEN_WIDTH - reg_screen_width - EDGE_GAP
-        pygame.draw.rect(
+        reg_screen_left_offset = 900 + (2 * EDGE_GAP)
+        reg_screen_width = (SCREEN_WIDTH - reg_screen_left_offset) - EDGE_GAP
+
+        self.registers_screen = pygame.draw.rect(
             self.screen,
             BLACK,
             (reg_screen_left_offset, reg_screen_top_offset, reg_screen_width, reg_screen_height))
 
+        self.draw_text(
+            self.screen,
+            "Registers",
+            self.screen_title_font,
+            TEXT_COLOR,
+            reg_screen_left_offset + EDGE_GAP,
+            reg_screen_top_offset + EDGE_GAP)
 
     def ram_block(self):
         ram_screen_top_offset = EDGE_GAP
         ram_screen_left_offset = EDGE_GAP
+        ram_screen_height = SCREEN_HEIGHT - (2 * EDGE_GAP)
         ram_screen_width = 900
-        ram_screen_height = SCREEN_HEIGHT - 40
-        pygame.draw.rect(
+
+        self.ram_screen = pygame.draw.rect(
             self.screen,
-            BLACK,
+            RAM_COLOUR,
             (ram_screen_left_offset, ram_screen_top_offset, ram_screen_width, ram_screen_height))
+
+        self.draw_text(
+            self.screen,
+            "RAM",
+            self.screen_title_font,
+            TEXT_COLOR,
+            (2 * EDGE_GAP),
+            (2 * EDGE_GAP))
+
+    def fill_ram_block(self):
+        y = 4 * EDGE_GAP
+        x = 0
+        for i in range(0, (2**11) + 20):
+            if i % 44 == 0:
+                x = 0
+                y += 20
+            self.draw_text(
+                self.screen,
+                random.choice(('0', '1'),),
+                self.code_font,
+                TEXT_COLOR,
+                (x * 20) + (2 * EDGE_GAP),
+                y)
+            x += 1
 
 
 
